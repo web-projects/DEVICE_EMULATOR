@@ -4,9 +4,9 @@ This an applicationto test NamedPipelines.
 
 ### What is this repository for? ###
 
-* JSON File reader utility
+* DEVICE EMULATOR APPLICATION
 * 1.00.0.(100)
-* git remote add origin git@github.com:web-projects/MOCK_PIPELINES.git
+* git remote add origin git@github.com:web-projects/DEVICE_EMULATOR.git
 
 ### How do I get set up? ###
 
@@ -30,6 +30,4 @@ This an applicationto test NamedPipelines.
    
 ### HISTORY ###
 
-* 20191020 - Initial repository.
-* 20191022 - Added bi-directional pipes.
-           - Completed bi-directional pipes.
+* 20191022 - Initial repository
