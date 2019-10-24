@@ -32,3 +32,5 @@ This an applicationto test NamedPipelines.
 
 * 20191022 - Initial repository
 * 20191024 - Added xUnit testing Nuget Package
+           - Added Ninject Nuget Package
+
