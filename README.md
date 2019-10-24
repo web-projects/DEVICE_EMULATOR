@@ -31,3 +31,4 @@ This an applicationto test NamedPipelines.
 ### HISTORY ###
 
 * 20191022 - Initial repository
+* 20191024 - Added xUnit testing Nuget Package
