@@ -47,6 +47,11 @@ namespace Device.Emulator
 
         #endregion
 
+        /********************************************************************************************************/
+        // CONSTRUCTION SECTION
+        /********************************************************************************************************/
+        #region -- construction --
+
         public EmulatorForm()
         {
             InitializeComponent();
@@ -54,11 +59,7 @@ namespace Device.Emulator
 
         private void OnMouseDown(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Left)
-            {
-                ReleaseCapture();
-                SendMessage(Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
-            }
+
         }
 
         private void ResetAll()
@@ -76,9 +77,16 @@ namespace Device.Emulator
             {
                 tbLCD.Text = request.DALActionRequest.DeviceUIRequest.DisplayText[0] + ":\r\n";
                 keysPressed = string.Empty;
-                collectKeys = true;
                 if (request.DALActionRequest.DeviceUIRequest.DisplayText[0].IndexOf("PIN", StringComparison.InvariantCultureIgnoreCase) >= 0)
+                {
                     pinMode = true;
+                    collectKeys = true;
+                }
+                else if (request.DALActionRequest.DeviceUIRequest.DisplayText[0].IndexOf("ZIP", StringComparison.InvariantCultureIgnoreCase) >= 0)
+                {
+                    pinMode = false;
+                    collectKeys = true;
+                }
             }
         }
         public void SetEmulatorScreenMessageCallbackFn(string message)
@@ -89,14 +97,23 @@ namespace Device.Emulator
             {
                 tbLCD.Text = request.DALActionRequest.DeviceUIRequest.DisplayText[0] + "\r\n";
                 keysPressed = string.Empty;
-                collectKeys = true;
                 if (request.DALActionRequest.DeviceUIRequest.DisplayText[0].IndexOf("PIN", StringComparison.InvariantCultureIgnoreCase) >= 0)
+                {
                     pinMode = true;
+                    collectKeys = true;
+                }
+                else if (request.DALActionRequest.DeviceUIRequest.DisplayText[0].IndexOf("ZIP", StringComparison.InvariantCultureIgnoreCase) >= 0)
+                {
+                    pinMode = false;
+                    collectKeys = true;
+                }
             }
         }
 
+        #endregion
+
         /********************************************************************************************************/
-        // ATTRIBUTES SECTION
+        // NUMERIC INPUT
         /********************************************************************************************************/
         #region -- numeric input --
 
@@ -193,9 +210,9 @@ namespace Device.Emulator
         #endregion
 
         /********************************************************************************************************/
-        // ATTRIBUTES SECTION
+        // BUTTON ACTION
         /********************************************************************************************************/
-        #region -- generic buttons --
+        #region -- button action --
 
         private void buttonDown_Click(object sender, EventArgs e)
         {

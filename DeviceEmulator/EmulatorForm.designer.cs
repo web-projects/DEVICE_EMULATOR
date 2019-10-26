@@ -29,6 +29,13 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
+            this.button2 = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
+            this.buttonInfo = new System.Windows.Forms.Button();
+            this.buttonCorrect = new System.Windows.Forms.Button();
+            this.buttonStop = new System.Windows.Forms.Button();
+            this.buttonUp = new System.Windows.Forms.Button();
+            this.buttonDown = new System.Windows.Forms.Button();
             this.tbLCD = new System.Windows.Forms.TextBox();
             this.buttonOK = new System.Windows.Forms.Button();
             this.button0 = new System.Windows.Forms.Button();
@@ -39,14 +46,7 @@
             this.button5 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
             this.lblStatus = new System.Windows.Forms.Label();
-            this.buttonDown = new System.Windows.Forms.Button();
-            this.buttonUp = new System.Windows.Forms.Button();
-            this.buttonStop = new System.Windows.Forms.Button();
-            this.buttonCorrect = new System.Windows.Forms.Button();
-            this.buttonInfo = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -76,6 +76,77 @@
             this.panel1.Size = new System.Drawing.Size(430, 370);
             this.panel1.TabIndex = 3;
             // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(122, 176);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(75, 37);
+            this.button2.TabIndex = 2;
+            this.button2.Text = "2";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(24, 176);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 37);
+            this.button1.TabIndex = 1;
+            this.button1.Text = "1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // buttonInfo
+            // 
+            this.buttonInfo.Location = new System.Drawing.Point(332, 268);
+            this.buttonInfo.Name = "buttonInfo";
+            this.buttonInfo.Size = new System.Drawing.Size(75, 37);
+            this.buttonInfo.TabIndex = 68;
+            this.buttonInfo.Text = "INFO";
+            this.buttonInfo.UseVisualStyleBackColor = true;
+            this.buttonInfo.Click += new System.EventHandler(this.buttonInfo_Click);
+            // 
+            // buttonCorrect
+            // 
+            this.buttonCorrect.Location = new System.Drawing.Point(332, 222);
+            this.buttonCorrect.Name = "buttonCorrect";
+            this.buttonCorrect.Size = new System.Drawing.Size(75, 37);
+            this.buttonCorrect.TabIndex = 67;
+            this.buttonCorrect.Text = "CORR";
+            this.buttonCorrect.UseVisualStyleBackColor = true;
+            this.buttonCorrect.Click += new System.EventHandler(this.buttonCorrect_Click);
+            // 
+            // buttonStop
+            // 
+            this.buttonStop.Location = new System.Drawing.Point(332, 176);
+            this.buttonStop.Name = "buttonStop";
+            this.buttonStop.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.buttonStop.Size = new System.Drawing.Size(75, 37);
+            this.buttonStop.TabIndex = 66;
+            this.buttonStop.Text = "STOP";
+            this.buttonStop.UseVisualStyleBackColor = true;
+            this.buttonStop.Click += new System.EventHandler(this.buttonStop_Click);
+            // 
+            // buttonUp
+            // 
+            this.buttonUp.Location = new System.Drawing.Point(234, 314);
+            this.buttonUp.Name = "buttonUp";
+            this.buttonUp.Size = new System.Drawing.Size(75, 37);
+            this.buttonUp.TabIndex = 65;
+            this.buttonUp.Text = "^";
+            this.buttonUp.UseVisualStyleBackColor = true;
+            this.buttonUp.Click += new System.EventHandler(this.buttonUp_Click);
+            // 
+            // buttonDown
+            // 
+            this.buttonDown.Location = new System.Drawing.Point(24, 314);
+            this.buttonDown.Name = "buttonDown";
+            this.buttonDown.Size = new System.Drawing.Size(75, 37);
+            this.buttonDown.TabIndex = 64;
+            this.buttonDown.Text = "v";
+            this.buttonDown.UseVisualStyleBackColor = true;
+            this.buttonDown.Click += new System.EventHandler(this.buttonDown_Click);
+            // 
             // tbLCD
             // 
             this.tbLCD.BackColor = System.Drawing.Color.Gold;
@@ -97,7 +168,6 @@
             this.buttonOK.Text = "OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
-            this.buttonOK.MouseDown += new System.Windows.Forms.MouseEventHandler(this.OnMouseDown);
             // 
             // button0
             // 
@@ -179,26 +249,6 @@
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(24, 176);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 37);
-            this.button1.TabIndex = 1;
-            this.button1.Text = "1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(122, 176);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 37);
-            this.button2.TabIndex = 2;
-            this.button2.Text = "2";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
-            // 
             // lblStatus
             // 
             this.lblStatus.BackColor = System.Drawing.Color.Red;
@@ -211,57 +261,6 @@
             this.lblStatus.TabIndex = 1;
             this.lblStatus.Text = "Device Idle";
             this.lblStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // buttonDown
-            // 
-            this.buttonDown.Location = new System.Drawing.Point(24, 314);
-            this.buttonDown.Name = "buttonDown";
-            this.buttonDown.Size = new System.Drawing.Size(75, 37);
-            this.buttonDown.TabIndex = 64;
-            this.buttonDown.Text = "v";
-            this.buttonDown.UseVisualStyleBackColor = true;
-            this.buttonDown.Click += new System.EventHandler(this.buttonDown_Click);
-            // 
-            // buttonUp
-            // 
-            this.buttonUp.Location = new System.Drawing.Point(234, 314);
-            this.buttonUp.Name = "buttonUp";
-            this.buttonUp.Size = new System.Drawing.Size(75, 37);
-            this.buttonUp.TabIndex = 65;
-            this.buttonUp.Text = "^";
-            this.buttonUp.UseVisualStyleBackColor = true;
-            this.buttonUp.Click += new System.EventHandler(this.buttonUp_Click);
-            // 
-            // buttonStop
-            // 
-            this.buttonStop.Location = new System.Drawing.Point(332, 176);
-            this.buttonStop.Name = "buttonStop";
-            this.buttonStop.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.buttonStop.Size = new System.Drawing.Size(75, 37);
-            this.buttonStop.TabIndex = 66;
-            this.buttonStop.Text = "STOP";
-            this.buttonStop.UseVisualStyleBackColor = true;
-            this.buttonStop.Click += new System.EventHandler(this.buttonStop_Click);
-            // 
-            // buttonCorrect
-            // 
-            this.buttonCorrect.Location = new System.Drawing.Point(332, 222);
-            this.buttonCorrect.Name = "buttonCorrect";
-            this.buttonCorrect.Size = new System.Drawing.Size(75, 37);
-            this.buttonCorrect.TabIndex = 67;
-            this.buttonCorrect.Text = "CORR";
-            this.buttonCorrect.UseVisualStyleBackColor = true;
-            this.buttonCorrect.Click += new System.EventHandler(this.buttonCorrect_Click);
-            // 
-            // buttonInfo
-            // 
-            this.buttonInfo.Location = new System.Drawing.Point(332, 268);
-            this.buttonInfo.Name = "buttonInfo";
-            this.buttonInfo.Size = new System.Drawing.Size(75, 37);
-            this.buttonInfo.TabIndex = 68;
-            this.buttonInfo.Text = "INFO";
-            this.buttonInfo.UseVisualStyleBackColor = true;
-            this.buttonInfo.Click += new System.EventHandler(this.buttonInfo_Click);
             // 
             // EmulatorForm
             // 

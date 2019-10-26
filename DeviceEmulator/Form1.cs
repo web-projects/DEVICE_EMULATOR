@@ -1,11 +1,14 @@
-﻿using System;
+﻿using MockPipelines.NamedPipeline;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -26,7 +29,7 @@ namespace Device.Emulator
         /********************************************************************************************************/
         // ATTRIBUTES SECTION
         /********************************************************************************************************/
-        #region -- attributes section --
+        #region -- attributes --
         // Always on TOP
         private static readonly IntPtr HWND_TOPMOST = new IntPtr(-1);
         private const UInt32 SWP_NOSIZE = 0x0001;
@@ -45,22 +48,26 @@ namespace Device.Emulator
         public EmulatorForm.SetEmulatorScreenKeyEntry SetEmulatorScreenKeyEntryCallback;
         public EmulatorForm.SetEmulatorScreenMessage  SetEmulatorScreenMessageCallback;
 
+        private readonly string _pipeName = "TC_DEVICE_EMULATOR_PIPELINE";
+        private ClientPipeline _clientpipe;
+        private bool connected;
+
         #endregion
+
+        /********************************************************************************************************/
+        // CONSTRUCTION SECTION
+        /********************************************************************************************************/
+        #region -- construction --
 
         public Form1()
         {
             InitializeComponent();
 
             emulator = new EmulatorForm();
-            emulator.EmulatorButtonOKClick += (sender, e) => this.lblFromEmulator.Text = e.Message;
+            emulator.EmulatorButtonOKClick += (sender, e) => this.lblFromEmulator.Invoke((MethodInvoker)(() => this.lblFromEmulator.Text = e.Message));
             this.SetEmulatorScreenKeyEntryCallback += new EmulatorForm.SetEmulatorScreenKeyEntry(emulator.SetEmulatorScreenKeyEntryCallbackFn);
             this.SetEmulatorScreenMessageCallback += new EmulatorForm.SetEmulatorScreenMessage(emulator.SetEmulatorScreenMessageCallbackFn);
         }
-
-        /********************************************************************************************************/
-        // ATTRIBUTES SECTION
-        /********************************************************************************************************/
-        #region -- events --
 
         private void OnFormLoad(object sender, EventArgs e)
         {
@@ -75,6 +82,128 @@ namespace Device.Emulator
             // Emulator
             emulator.Location = new Point(this.Left, this.Top - emulator.Height);
             emulator.Show();
+
+            StartClientPipeline();
+        }
+        #endregion
+
+        /********************************************************************************************************/
+        // IMPLEMENTATION SECTION
+        /********************************************************************************************************/
+        #region -- IMPLEMENTATION --
+
+        private void StartClientPipeline()
+        {
+            //TODO: Allow Server-Side GUID
+            //string _pipeName = Clipboard.GetText();
+            Debug.WriteLine($"client: pipeline started with GUID=[{_pipeName}]");
+            _clientpipe = new ClientPipeline(string.IsNullOrEmpty(_pipeName) ? Guid.NewGuid().ToString() : _pipeName);
+            _clientpipe.ClientPipeMessage += (sender, e) => this.lblFromServer.Invoke((MethodInvoker)(() => this.lblFromServer.Text = e.Message));
+ 
+            new Thread(() =>
+            {
+                Thread.CurrentThread.IsBackground = true;
+                Debug.WriteLine("client: pipe started! +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+
+                _clientpipe.Start();
+                _clientpipe.SendMessage("CLIENT CONNECTED");
+
+                this.Invoke(new MethodInvoker(() =>
+                {
+                    this.button2.Enabled = false;
+                    this.button3.Enabled = false;
+                    this.button4.Enabled = false;
+                    this.button5.Enabled = false;
+                    this.lblFromServer.Text = "WAITING FOR SERVER REQUEST...";
+                }));
+
+                connected = true;
+                while (connected)
+                {
+                    Thread.Sleep(100);
+                }
+
+            }).Start();
+        }
+
+        private void OnLabelFromServerChanged(object sender, EventArgs e)
+        {
+            statusidle = false;
+            string lblText = "REQUEST:";
+
+            switch (this.lblFromServer.Text)
+            {
+                case "Insert Card":
+                {
+                    this.button2.Enabled = true;
+                    this.lblFromEmulator.Text = string.Empty;
+                    SetEmulatorScreenMessageCallback(string.Format(displayText, "Insert card"));
+                    break;
+                }
+
+                case "Remove Card":
+                {
+                    this.button3.Enabled = true;
+                    this.lblFromEmulator.Text = string.Empty;
+                    SetEmulatorScreenMessageCallback(string.Format(displayText, "Remove card"));
+                    break;
+                }
+
+                case "Enter Zip Code":
+                {
+                    this.button4.Enabled = true;
+                    SetEmulatorScreenKeyEntryCallback(string.Format(getZipCode, "Enter ZIP"));
+                    break;
+                }
+
+                case "Enter PIN":
+                {
+                    this.button5.Enabled = true;
+                    SetEmulatorScreenKeyEntryCallback(string.Format(getPINCode, "Enter PIN"));
+                    break;
+                }
+
+                case "WELCOME":
+                case "STATUS: APPROVED":
+                {
+                    SetEmulatorScreenMessageCallback(string.Format(displayText, this.lblFromServer.Text));
+                    this.lblFromEmulator.Text = string.Empty;
+                    break;
+                }
+
+                default:
+                {
+                    lblText = "REPLY:";
+                    statusidle = true;
+                    break;
+                }
+            }
+            this.lblServerRequest.Text = lblText;
+            emulator.SetEmulatorStatus = (statusidle ? "Device Idle" : "Device Busy");
+        }
+
+        private void OnLabelFromEmulatorChanged(object sender, EventArgs e)
+        {
+            if(this.button4.Enabled && this.lblFromEmulator.Text != string.Empty)
+            {
+                if (_clientpipe != null)
+                {
+                    _clientpipe.SendMessage(this.lblFromEmulator.Text);
+                    this.lblFromServer.Text = this.lblFromEmulator.Text;
+                    SetEmulatorScreenMessageCallback(string.Format(displayText, "Processing..."));
+                }
+                this.button4.Enabled = false;
+            }
+            else if (this.button5.Enabled && this.lblFromEmulator.Text != string.Empty)
+            {
+                if (_clientpipe != null)
+                {
+                    _clientpipe.SendMessage(this.lblFromEmulator.Text);
+                    this.lblFromServer.Text = this.lblFromEmulator.Text;
+                    SetEmulatorScreenMessageCallback(string.Format(displayText, "Processing..."));
+                }
+                this.button5.Enabled = false;
+            }
         }
 
         private void OnLocationChanged(object sender, EventArgs e)
@@ -95,31 +224,62 @@ namespace Device.Emulator
         #endregion
 
         /********************************************************************************************************/
-        // ATTRIBUTES SECTION
+        // BUTTONS ACTIONS
         /********************************************************************************************************/
-        #region -- generic buttons --
+        #region -- buttons actions --
 
-        public void button1_Click(object sender, EventArgs e)
+        private void button1_Click(object sender, EventArgs e)
         {
-            SetEmulatorScreenKeyEntryCallback(string.Format(getZipCode, this.button1.Text));
-            this.lblFromEmulator.Text = string.Empty;
+            if (_clientpipe != null)
+            {
+                _clientpipe.SendMessage("CLIENT EXITING...");
+                _clientpipe.Stop();
+                connected = false;
+            }
+
+            Application.Exit();
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            SetEmulatorScreenKeyEntryCallback(string.Format(getPINCode, this.button2.Text));
-            this.lblFromEmulator.Text = string.Empty;
+            if (_clientpipe != null)
+            {
+                _clientpipe.SendMessage("Card Inserted");
+                this.lblFromServer.Text = "1234 5678 9090 1212";
+                SetEmulatorScreenMessageCallback(string.Format(displayText, "Processing..."));
+            }
+            this.button2.Enabled = false;
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
-            statusidle = !statusidle;
-            emulator.SetEmulatorStatus = (statusidle ? "Device Idle" : "Device Busy");
+            if (_clientpipe != null)
+            {
+                _clientpipe.SendMessage("Card Removed");
+                this.lblFromServer.Text = "**** **** **** ****";
+                SetEmulatorScreenMessageCallback(string.Format(displayText, "Processing..."));
+            }
+            this.button3.Enabled = false;
         }
 
         private void button4_Click(object sender, EventArgs e)
         {
-            SetEmulatorScreenMessageCallback(string.Format(displayText, "Insert card"));
+            //if (_clientpipe != null)
+            //{
+            //    _clientpipe.SendMessage("1234");
+            //    this.lblFromServer.Text = "1234";
+            //}
+            //this.button4.Enabled = false;
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            //if (_clientpipe != null)
+            //{
+            //    _clientpipe.SendMessage("****");
+            //    this.lblFromServer.Text = "****";
+            //}
+            //this.button5.Enabled = false;
         }
 
         #endregion
