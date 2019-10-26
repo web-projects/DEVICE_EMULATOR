@@ -31,6 +31,8 @@ This an applicationto test NamedPipelines.
 ### HISTORY ###
 
 * 20191022 - Initial repository
-* 20191024 - Added xUnit testing Nuget Package
+* 20191023 - Added xUnit testing Nuget Package
            - Added Ninject Nuget Package
+* 20191024 - Added NamedPipelines.
+* 20191025 - First pass connecting pipes.
 
