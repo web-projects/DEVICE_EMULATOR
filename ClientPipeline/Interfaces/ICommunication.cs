@@ -4,6 +4,6 @@
     {
         void Start();
         void Stop();
-        void SendMessage(string message);
+        void SendMessage(string message, string command);
     }
 }

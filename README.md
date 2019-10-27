@@ -35,4 +35,5 @@ This an applicationto test NamedPipelines.
            - Added Ninject Nuget Package
 * 20191024 - Added NamedPipelines.
 * 20191025 - First pass connecting pipes.
+* 20191026 - Enhanced connecting pipes.
 

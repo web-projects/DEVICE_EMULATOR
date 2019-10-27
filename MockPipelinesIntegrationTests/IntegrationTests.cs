@@ -106,7 +106,7 @@ namespace MockPipelines.NamedPipeline.IntegrationTests
             _client.Start();
 
             // Act
-            _client.SendMessage("Client's message");
+            _client.SendMessage("Client's message", "Client's message");
 
             // Verify
             autoEvent.WaitOne();

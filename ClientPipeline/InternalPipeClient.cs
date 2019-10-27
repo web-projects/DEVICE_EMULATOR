@@ -21,7 +21,7 @@ namespace MockPipelines.NamedPipeline
         private const int BufferSize = 2048;
 
         // Client Messages - Insert Card, Remove Card
-        private string displayText = "{{ \"DALActionResponse\": {{ \"DeviceUIResponse\": {{ \"UIAction\": \"Display\", \"DisplayText\": [\"{0}\"] }} }} }}";
+        private string displayText = "{{ \"DALActionResponse\": {{ \"DeviceUIResponse\": {{ \"UIAction\": \"Display\", \"DisplayText\": [\"{0}\"], \"Command\": \"{1}\" }} }} }}";
 
         #endregion
 
@@ -204,14 +204,14 @@ namespace MockPipelines.NamedPipeline
             }
         }
 
-        public void SendMessage(string message)
+        public void SendMessage(string message, string command)
         {
             if (_pipeClient?.IsConnected ?? false)
             {
                 var info = new Info();
 
                 // Get the write bytes and append them
-                byte [] writeBytes = Encoding.ASCII.GetBytes(string.Format(displayText, message));
+                byte [] writeBytes = Encoding.ASCII.GetBytes(string.Format(displayText, message, command));
                 Array.Copy(writeBytes, writeBytes.GetLowerBound(0), info.Buffer, info.Buffer.GetLowerBound(0), writeBytes.Length);
                 info.StringBuilder.Append(Encoding.UTF8.GetString(info.Buffer, 0, info.Buffer.Length));
                 BeginWrite(info);
