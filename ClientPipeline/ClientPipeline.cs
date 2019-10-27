@@ -111,9 +111,9 @@ namespace MockPipelines.NamedPipeline
             }
         }
 
-        public void SendMessage(string message)
+        public void SendMessage(string message, string command)
         {
-            client?.SendMessage(message);
+            client?.SendMessage(message, command);
         }
 
         #endregion

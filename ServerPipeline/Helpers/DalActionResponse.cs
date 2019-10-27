@@ -19,5 +19,6 @@ namespace MockPipelines.NamedPipeline.Helpers
     {
         public string UIAction { get; set; }
         public List<string> DisplayText { get; set; }
+        public string Command { get; set; }
     }
 }

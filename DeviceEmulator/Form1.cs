@@ -51,6 +51,7 @@ namespace Device.Emulator
         private readonly string _pipeName = "TC_DEVICE_EMULATOR_PIPELINE";
         private ClientPipeline _clientpipe;
         private bool connected;
+        private EntryType entrytype;
 
         #endregion
 
@@ -106,7 +107,7 @@ namespace Device.Emulator
                 Debug.WriteLine("client: pipe started! +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
 
                 _clientpipe.Start();
-                _clientpipe.SendMessage("CLIENT CONNECTED");
+                _clientpipe.SendMessage("CLIENT CONNECTED", "CLIENT CONNECTED");
 
                 this.Invoke(new MethodInvoker(() =>
                 {
@@ -151,25 +152,40 @@ namespace Device.Emulator
 
                 case "Enter Zip Code":
                 {
-                    this.button4.Enabled = true;
+                    //this.button4.Enabled = true;
+                    entrytype = EntryType.ENTRY_ZIP;
                     SetEmulatorScreenKeyEntryCallback(string.Format(getZipCode, "Enter ZIP"));
                     break;
                 }
 
                 case "Enter PIN":
                 {
-                    this.button5.Enabled = true;
+                    //this.button5.Enabled = true;
+                    entrytype = EntryType.ENTRY_PIN;
+                    this.lblFromEmulator.Text = string.Empty;
                     SetEmulatorScreenKeyEntryCallback(string.Format(getPINCode, "Enter PIN"));
                     break;
                 }
 
-                case "WELCOME":
                 case "STATUS: APPROVED":
                 {
                     SetEmulatorScreenMessageCallback(string.Format(displayText, this.lblFromServer.Text));
                     this.lblFromEmulator.Text = string.Empty;
+                    Task.Run(() =>
+                    {
+                        Thread.Sleep(2000);
+                        _clientpipe.SendMessage("WELCOME", "WELCOME");
+                    });
                     break;
                 }
+
+                case "WELCOME":
+                {
+                    entrytype = EntryType.ENTRY_NONE;
+                    this.lblFromEmulator.Text = string.Empty;
+                    SetEmulatorScreenMessageCallback(string.Format(displayText, this.lblFromServer.Text));
+                    break;
+            }
 
                 default:
                 {
@@ -184,21 +200,21 @@ namespace Device.Emulator
 
         private void OnLabelFromEmulatorChanged(object sender, EventArgs e)
         {
-            if(this.button4.Enabled && this.lblFromEmulator.Text != string.Empty)
+            if(entrytype == EntryType.ENTRY_ZIP && this.lblFromEmulator.Text != string.Empty)
             {
                 if (_clientpipe != null)
                 {
-                    _clientpipe.SendMessage(this.lblFromEmulator.Text);
+                    _clientpipe.SendMessage(this.lblFromEmulator.Text, "ZIP");
                     this.lblFromServer.Text = this.lblFromEmulator.Text;
                     SetEmulatorScreenMessageCallback(string.Format(displayText, "Processing..."));
                 }
                 this.button4.Enabled = false;
             }
-            else if (this.button5.Enabled && this.lblFromEmulator.Text != string.Empty)
+            else if (entrytype == EntryType.ENTRY_PIN && this.lblFromEmulator.Text != string.Empty)
             {
                 if (_clientpipe != null)
                 {
-                    _clientpipe.SendMessage(this.lblFromEmulator.Text);
+                    _clientpipe.SendMessage(this.lblFromEmulator.Text, "PIN");
                     this.lblFromServer.Text = this.lblFromEmulator.Text;
                     SetEmulatorScreenMessageCallback(string.Format(displayText, "Processing..."));
                 }
@@ -232,7 +248,7 @@ namespace Device.Emulator
         {
             if (_clientpipe != null)
             {
-                _clientpipe.SendMessage("CLIENT EXITING...");
+                _clientpipe.SendMessage("CLIENT EXITING...", "CLIENT EXITING...");
                 _clientpipe.Stop();
                 connected = false;
             }
@@ -244,8 +260,8 @@ namespace Device.Emulator
         {
             if (_clientpipe != null)
             {
-                _clientpipe.SendMessage("Card Inserted");
                 this.lblFromServer.Text = "1234 5678 9090 1212";
+                _clientpipe.SendMessage(this.lblFromServer.Text, "Card Inserted");
                 SetEmulatorScreenMessageCallback(string.Format(displayText, "Processing..."));
             }
             this.button2.Enabled = false;
@@ -255,8 +271,8 @@ namespace Device.Emulator
         {
             if (_clientpipe != null)
             {
-                _clientpipe.SendMessage("Card Removed");
                 this.lblFromServer.Text = "**** **** **** ****";
+                _clientpipe.SendMessage(this.lblFromServer.Text, "Card Removed");
                 SetEmulatorScreenMessageCallback(string.Format(displayText, "Processing..."));
             }
             this.button3.Enabled = false;
@@ -283,5 +299,12 @@ namespace Device.Emulator
         }
 
         #endregion
+    }
+
+    public enum EntryType
+    {
+        ENTRY_NONE,
+        ENTRY_ZIP,
+        ENTRY_PIN
     }
 }
