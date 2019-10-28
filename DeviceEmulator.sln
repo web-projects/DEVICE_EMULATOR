@@ -5,13 +5,17 @@ VisualStudioVersion = 15.0.28307.168
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeviceEmulator", "DeviceEmulator\DeviceEmulator.csproj", "{C85C84DA-2655-4047-A46C-055711738E9B}"
 	ProjectSection(ProjectDependencies) = postProject
-		{F641916D-0302-4BF5-BDF3-E4AD11AB733E} = {F641916D-0302-4BF5-BDF3-E4AD11AB733E}
 		{9D038694-1B33-43A2-ACAB-C9FAB7AE4C88} = {9D038694-1B33-43A2-ACAB-C9FAB7AE4C88}
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientPipeline", "ClientPipeline\ClientPipeline.csproj", "{9D038694-1B33-43A2-ACAB-C9FAB7AE4C88}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MockPipelines", "MockPipelines\MockPipelines.csproj", "{0B8CE97D-430F-42D2-94C9-6FB5CD556FA7}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F641916D-0302-4BF5-BDF3-E4AD11AB733E} = {F641916D-0302-4BF5-BDF3-E4AD11AB733E}
+		{9D038694-1B33-43A2-ACAB-C9FAB7AE4C88} = {9D038694-1B33-43A2-ACAB-C9FAB7AE4C88}
+		{C85C84DA-2655-4047-A46C-055711738E9B} = {C85C84DA-2655-4047-A46C-055711738E9B}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MockPipelinesIntegrationTests", "MockPipelinesIntegrationTests\MockPipelinesIntegrationTests.csproj", "{230F34C1-C4E7-452C-8DBC-8FF80627D934}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -22,9 +26,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MockPipelinesIntegrationTes
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServerPipeline", "ServerPipeline\ServerPipeline.csproj", "{F641916D-0302-4BF5-BDF3-E4AD11AB733E}"
-	ProjectSection(ProjectDependencies) = postProject
-		{9D038694-1B33-43A2-ACAB-C9FAB7AE4C88} = {9D038694-1B33-43A2-ACAB-C9FAB7AE4C88}
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -66,6 +66,8 @@
     <Compile Include="Helpers\DalActionResponse.cs" />
     <Compile Include="Helpers\EventHandlerExtensions.cs" />
     <Compile Include="Helpers\Logger.cs" />
+    <Compile Include="Helpers\StringEnum.cs" />
+    <Compile Include="Helpers\StringValue.cs" />
     <Compile Include="Helpers\TaskResult.cs" />
     <Compile Include="Interfaces\ICommunication.cs" />
     <Compile Include="Interfaces\ICommunicationServer.cs" />

@@ -31,10 +31,11 @@ namespace Device.Emulator
 
         private bool collectKeys;
         private bool pinMode;
+        private bool singleKey;
 
         public event EventHandler<MessageEventArgs> EmulatorButtonOKClick;
 
-        public delegate void SetEmulatorScreenKeyEntry(string message);
+        public delegate void SetEmulatorScreenKeyEntry(string message, bool terminate = true);
         public delegate void SetEmulatorScreenMessage(string message);
 
         public string SetEmulatorStatus
@@ -67,15 +68,17 @@ namespace Device.Emulator
             keysPressed = string.Empty;
             collectKeys = false;
             pinMode     = false;
+            singleKey    = false;
+            SetKeyEnabled(true);
         }
 
-        public void SetEmulatorScreenKeyEntryCallbackFn(string message)
+        public void SetEmulatorScreenKeyEntryCallbackFn(string message, bool terminate)
         {
             string value = System.Text.RegularExpressions.Regex.Replace(message.Trim('\"'), "[\\\\]+", string.Empty);
             DalActionRequestRoot request = JsonConvert.DeserializeObject<DalActionRequestRoot>(value);
             if (request != null)
             {
-                tbLCD.Text = request.DALActionRequest.DeviceUIRequest.DisplayText[0] + ":\r\n";
+                tbLCD.Text = request.DALActionRequest.DeviceUIRequest.DisplayText[0] + (terminate ? ":\r\n" : "");
                 keysPressed = string.Empty;
                 if (request.DALActionRequest.DeviceUIRequest.DisplayText[0].IndexOf("PIN", StringComparison.InvariantCultureIgnoreCase) >= 0)
                 {
@@ -87,8 +90,14 @@ namespace Device.Emulator
                     pinMode = false;
                     collectKeys = true;
                 }
+                else if (request.DALActionRequest.DeviceUIRequest.DisplayText[0].IndexOf("Enter Card Type", StringComparison.InvariantCultureIgnoreCase) >= 0)
+                {
+                    collectKeys = true;
+                    singleKey = true;
+                }
             }
         }
+
         public void SetEmulatorScreenMessageCallbackFn(string message)
         {
             string value = System.Text.RegularExpressions.Regex.Replace(message.Trim('\"'), "[\\\\]+", string.Empty);
@@ -117,12 +126,27 @@ namespace Device.Emulator
         /********************************************************************************************************/
         #region -- numeric input --
 
+        private void SetKeyEnabled(bool mode)
+        {
+            this.buttonInfo.Enabled = this.buttonCorrect.Enabled = this.buttonStop.Enabled =
+            this.buttonUp.Enabled = this.buttonDown.Enabled =
+            this.button1.Enabled = this.button2.Enabled = this.button3.Enabled = this.button4.Enabled =
+            this.button5.Enabled = this.button6.Enabled = this.button7.Enabled = this.button8.Enabled =
+            this.button9.Enabled = this.button0.Enabled = mode;
+        }
+
         public void button1_Click(object sender, EventArgs e)
         {
             if (collectKeys)
             {
                 keysPressed += this.button1.Text;
-                this.tbLCD.Text += pinMode ? "*" : this.button1.Text;
+                if(singleKey)
+                { 
+                    collectKeys = false;
+                    SetKeyEnabled(false);
+                }
+                else
+                    this.tbLCD.Text += pinMode ? "*" : this.button1.Text;
             }
         }
 
@@ -131,7 +155,13 @@ namespace Device.Emulator
             if (collectKeys)
             { 
                 keysPressed += this.button2.Text;
-                this.tbLCD.Text += pinMode ? "*" : this.button2.Text;
+                if (singleKey)
+                {
+                    collectKeys = false;
+                    SetKeyEnabled(false);
+                }
+                else
+                    this.tbLCD.Text += pinMode ? "*" : this.button2.Text;
             }
         }
 
@@ -140,7 +170,13 @@ namespace Device.Emulator
             if (collectKeys)
             {
                 keysPressed += this.button3.Text;
-                this.tbLCD.Text += pinMode ? "*" : this.button3.Text;
+                if (singleKey)
+                {
+                    collectKeys = false;
+                    SetKeyEnabled(false);
+                }
+                else
+                    this.tbLCD.Text += pinMode ? "*" : this.button3.Text;
             }
         }
 
@@ -149,7 +185,13 @@ namespace Device.Emulator
             if (collectKeys)
             {
                 keysPressed += this.button4.Text;
-                this.tbLCD.Text += pinMode ? "*" : this.button4.Text;
+                if (singleKey)
+                {
+                    collectKeys = false;
+                    SetKeyEnabled(false);
+                }
+                else
+                    this.tbLCD.Text += pinMode ? "*" : this.button4.Text;
             }
         }
 
@@ -158,7 +200,13 @@ namespace Device.Emulator
             if (collectKeys)
             {
                 keysPressed += this.button5.Text;
-                this.tbLCD.Text += pinMode ? "*" : this.button5.Text;
+                if (singleKey)
+                {
+                    collectKeys = false;
+                    SetKeyEnabled(false);
+                }
+                else
+                    this.tbLCD.Text += pinMode ? "*" : this.button5.Text;
             }
         }
 
@@ -167,7 +215,13 @@ namespace Device.Emulator
             if (collectKeys)
             {
                 keysPressed += this.button6.Text;
-                this.tbLCD.Text += pinMode ? "*" : this.button6.Text;
+                if (singleKey)
+                {
+                    collectKeys = false;
+                    SetKeyEnabled(false);
+                }
+                else
+                    this.tbLCD.Text += pinMode ? "*" : this.button6.Text;
             }
         }
 
@@ -176,7 +230,13 @@ namespace Device.Emulator
             if (collectKeys)
             {
                 keysPressed += this.button7.Text;
-                this.tbLCD.Text += pinMode ? "*" : this.button7.Text;
+                if (singleKey)
+                {
+                    collectKeys = false;
+                    SetKeyEnabled(false);
+                }
+                else
+                    this.tbLCD.Text += pinMode ? "*" : this.button7.Text;
             }
         }
 
@@ -185,7 +245,13 @@ namespace Device.Emulator
             if (collectKeys)
             {
                 keysPressed += this.button8.Text;
-                this.tbLCD.Text += pinMode ? "*" : this.button8.Text;
+                if (singleKey)
+                {
+                    collectKeys = false;
+                    SetKeyEnabled(false);
+                }
+                else
+                    this.tbLCD.Text += pinMode ? "*" : this.button8.Text;
             }
         }
 
@@ -194,7 +260,13 @@ namespace Device.Emulator
             if (collectKeys)
             {
                 keysPressed += this.button9.Text;
-                this.tbLCD.Text += pinMode ? "*" : this.button9.Text;
+                if (singleKey)
+                {
+                    collectKeys = false;
+                    SetKeyEnabled(false);
+                }
+                else
+                    this.tbLCD.Text += pinMode ? "*" : this.button9.Text;
             }
         }
 
@@ -203,7 +275,13 @@ namespace Device.Emulator
             if (collectKeys)
             {
                 keysPressed += this.button0.Text;
-                this.tbLCD.Text += pinMode ? "*" : this.button0.Text;
+                if (singleKey)
+                {
+                    collectKeys = false;
+                    SetKeyEnabled(false);
+                }
+                else
+                    this.tbLCD.Text += pinMode ? "*" : this.button0.Text;
             }
         }
 
@@ -213,6 +291,18 @@ namespace Device.Emulator
         // BUTTON ACTION
         /********************************************************************************************************/
         #region -- button action --
+
+        private void OnLCDTextChanged(object sender, EventArgs e)
+        {
+            if(pinMode && keysPressed?.Length >= 4)
+            {
+                SetKeyEnabled(false);
+            }
+            else if (keysPressed?.Length >= 5)
+            {
+                SetKeyEnabled(false);
+            }
+        }
 
         private void buttonDown_Click(object sender, EventArgs e)
         {

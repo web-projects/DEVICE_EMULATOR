@@ -158,6 +158,7 @@
             this.tbLCD.TabIndex = 63;
             this.tbLCD.Text = "WELCOME";
             this.tbLCD.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbLCD.TextChanged += new System.EventHandler(this.OnLCDTextChanged);
             // 
             // buttonOK
             // 

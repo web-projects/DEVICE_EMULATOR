@@ -12,8 +12,9 @@ namespace MockPipelines.NamedPipeline
         {
             "Insert Card",
             "Remove Card",
-            "Enter Zip Code",
+            "Enter Card Type, 1) Debit, 2) Credit",
             "Enter PIN",
+            "Enter Zip",
             "STATUS: APPROVED",
             "WELCOME"
         };
@@ -56,21 +57,28 @@ namespace MockPipelines.NamedPipeline
                         break;
                     }
 
-                    case "ZIP":
+                    case "Debit":
                     {
                         serverpipe.SendMessage($"{MESSAGES[3]}");
                         break;
                     }
 
-                    case "PIN":
+                    case "Credit":
                     {
                         serverpipe.SendMessage($"{MESSAGES[4]}");
                         break;
                     }
 
-                    case "WELCOME":
+                    case "ZIP":
+                    case "PIN":
                     {
                         serverpipe.SendMessage($"{MESSAGES[5]}");
+                        break;
+                    }
+
+                    case "WELCOME":
+                    {
+                        serverpipe.SendMessage($"{MESSAGES[6]}");
                         Task.Run(() =>
                         {
                             Thread.Sleep(5000);
@@ -95,5 +103,35 @@ namespace MockPipelines.NamedPipeline
             }
 
         }
+    }
+
+    internal enum Messages
+    {
+        [System.ComponentModel.Description("Insert Card")]
+        InsertCard = 1,
+        [System.ComponentModel.Description("Card Inserted")]
+        CardInserted = 2,
+        [System.ComponentModel.Description("Remove Card")]
+        RemoveCard = 3,
+        [System.ComponentModel.Description("Card Removed")]
+        CardRemoved = 4,
+        [System.ComponentModel.Description("Enter Card Type\r\n1) Debit\r\n2) Credit")]
+        CardType = 5,
+        [System.ComponentModel.Description("Debit")]
+        Debit = 6,
+        [System.ComponentModel.Description("Credit")]
+        Credit = 7,
+        [System.ComponentModel.Description("Enter Zip Code")]
+        EnterZip = 8,
+        [System.ComponentModel.Description("ZIP")]
+        ZipEntered = 9,
+        [System.ComponentModel.Description("Enter PIN")]
+        EnterPin = 10,
+        [System.ComponentModel.Description("PIN")]
+        PinEntered = 11,
+        [System.ComponentModel.Description("STATUS: APPROVED")]
+        StatusApproved = 12,
+        [System.ComponentModel.Description("WELCOME")]
+        Welcome = 13
     }
 }

@@ -150,7 +150,15 @@ namespace Device.Emulator
                     break;
                 }
 
-                case "Enter Zip Code":
+                case "Enter Card Type, 1) Debit, 2) Credit":
+                {
+                    entrytype = EntryType.ENTRY_ONEKEY;
+                    string [] displayMessage = this.lblFromServer.Text.Split(',');
+                    SetEmulatorScreenKeyEntryCallback(string.Format(displayText, string.Join("\r\n", displayMessage)), false);
+                    break;
+                }
+
+                case "Enter Zip":
                 {
                     //this.button4.Enabled = true;
                     entrytype = EntryType.ENTRY_ZIP;
@@ -220,6 +228,15 @@ namespace Device.Emulator
                 }
                 this.button5.Enabled = false;
             }
+            else if (entrytype == EntryType.ENTRY_ONEKEY && this.lblFromEmulator.Text != string.Empty)
+            {
+                if (_clientpipe != null)
+                {
+                    _clientpipe.SendMessage(this.lblFromEmulator.Text, this.lblFromEmulator.Text.Equals("1") ? "Debit" : "Credit");
+                    this.lblFromServer.Text = this.lblFromEmulator.Text;
+                    SetEmulatorScreenMessageCallback(string.Format(displayText, "Processing..."));
+                }
+            }
         }
 
         private void OnLocationChanged(object sender, EventArgs e)
@@ -234,6 +251,7 @@ namespace Device.Emulator
             {
                 ReleaseCapture();
                 SendMessage(Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
+                emulator.BringToFront();
             }
         }
 
@@ -304,6 +322,7 @@ namespace Device.Emulator
     public enum EntryType
     {
         ENTRY_NONE,
+        ENTRY_ONEKEY,
         ENTRY_ZIP,
         ENTRY_PIN
     }

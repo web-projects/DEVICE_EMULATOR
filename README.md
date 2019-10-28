@@ -36,4 +36,4 @@ This an applicationto test NamedPipelines.
 * 20191024 - Added NamedPipelines.
 * 20191025 - First pass connecting pipes.
 * 20191026 - Enhanced connecting pipes.
-
+* 20191028 - Redesigned card workflow.
